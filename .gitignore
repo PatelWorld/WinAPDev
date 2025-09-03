@@ -1,0 +1,6 @@
+/.venv
+/logs*
+/*.env
+/.idea
+/logs
+/src/binary/*.zip
