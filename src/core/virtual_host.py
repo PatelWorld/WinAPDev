@@ -1,6 +1,7 @@
 import os
 
 from src.core.certificate_manager import CertificateManager
+from src.core.cli_arguments import Arguments
 from src.core.path_manager import PathManager
 from src.core.system_paths import SystemPaths
 from src.core.windows_host_manager import WindowsHostsManager
@@ -44,6 +45,26 @@ class VirtualHost:
 
         # Remove from hosts
         WindowsHostsManager().delete_entry(hostname)
+
+    def add_project(self, args: Arguments):
+        hostname = args.get("hostname")
+        if hostname is None:
+            raise RuntimeError("Wrong hostname provided")
+
+        root_dir = args.get("dir")
+        if root_dir is None:
+            raise RuntimeError("Wrong")
+
+        port = args.get("port", 80)
+
+        self.add(hostname, port, root_dir)
+
+    def remove_project(self, args: Arguments):
+        hostname = args.get("hostname")
+        if hostname is None:
+            raise RuntimeError("Wrong hostname provided")
+
+        self.remove(hostname)
 
     @staticmethod
     def build(hostname, port, app_root, ssl=False):

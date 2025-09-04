@@ -4,8 +4,11 @@ from pathlib import Path
 from colorama import init, Fore
 
 from src.core.app_structure import AppStructure
+from src.core.batch_file_creator import BatchFileCreator
 from src.core.binaries import Binaries
+from src.core.console_logger import ConsoleLogger
 from src.core.constants import Constants
+from src.core.env_path_manager import EnvPathManager
 from src.core.extractor import Extractor
 from src.core.file_downloader import FileDownloader
 from src.core.path_manager import PathManager
@@ -32,6 +35,8 @@ class Server:
     def setup(self):
         self.init()
         self.__configure()
+        self.__write_env()
+        self.__write_batch()
         Service().install()
         Service().start()
         self.__open_app()
@@ -51,6 +56,7 @@ class Server:
         if os.path.exists(self.path_manager.deploy_root()):
             Service().remove()
             AppStructure(self.path_manager.deploy_root()).delete()
+            self.__clear_env()
         else:
             print(
                 f"{Fore.RED}Error: {Fore.CYAN}{self.path_manager.deploy_structure(Constants.KEY_ROOT)}{Fore.RED} not found, Either it's not installed yet or already deleted."
@@ -77,7 +83,14 @@ class Server:
         Templates().deploy()
         VirtualHost().add("dev.local", 80, self.path_manager.deploy_structure(Constants.DIR_WWW))
 
-    # STEP-1: creating Index file for all servers
+    def __write_env(self):
+        EnvPathManager(system=True).add(self.path_manager.deploy_structure(Constants.DIR_COMMAND))
+        ConsoleLogger.info("Command path added to system environment variable")
+
+    def __clear_env(self):
+        EnvPathManager(system=True).delete(self.path_manager.deploy_structure(Constants.DIR_COMMAND))
+        ConsoleLogger.info("Command path deleted from system environment variable")
+
     def __create_server_index_file(self):
         print(f"{Fore.GREEN}Creating server index file...")
 
@@ -97,3 +110,9 @@ class Server:
             f"\nApplication URL: http://dev.local:80"
         )
         os.system(cmd)
+
+    def __write_batch(self):
+        command_file = os.path.join(self.path_manager.deploy_structure(Constants.DIR_COMMAND),"php.env.bat")
+        BatchFileCreator(self.path_manager.project_structure(Constants.KEY_ROOT), command_file).create_batch()
+        # target_file = os.path.join(self.path_manager.paths.system32, "php.env.bat")
+        # os.system(f"mklink /D {target_file} {command_file}")

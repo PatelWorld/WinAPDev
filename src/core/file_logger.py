@@ -6,7 +6,7 @@ import os
 # from src.core.core import Root
 
 
-class Logger:
+class FileLogger:
     def __init__(self, log_root=None, auto_json=False):
         # self.PATH = Root()
         self.log_root = log_root  # or self.PATH.BUILDER.LOG

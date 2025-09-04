@@ -66,23 +66,43 @@ class SystemPaths:
 
     @property
     def system_drive(self) -> str:
-        """System drive root (Windows: C:, Linux/Mac: /)"""
-        if "windows" in self.platform.lower():
-            return os.environ.get("SystemDrive", "C:") + "\\"  # usually C:
-        else:
-            return "/"  # root filesystem for Unix-like systems
+        """System drive root (usually C:\\)"""
+        return os.environ.get("SystemDrive", "C:") + "\\"
+
+    @property
+    def windows(self) -> str:
+        """Windows directory (usually C:\\Windows)"""
+        return os.environ.get("SystemRoot", os.path.join(self.system_drive, "Windows"))
+
+    @property
+    def system32(self) -> str:
+        """System32 directory (C:\\Windows\\System32)"""
+        return os.path.join(self.windows, "System32")
 
     @property
     def system_host(self) -> str:
-        """System hostname"""
-        return self.system_drive + os.path.join(
-            "Windows", "System32", "drivers", "etc", "hosts"
-        )
+        """Hosts file path"""
+        return os.path.join(self.system32, "drivers", "etc", "hosts")
 
     @property
     def script_path(self) -> str:
         """Path of the currently running script"""
         return os.path.abspath(sys.argv[0])
+
+    @property
+    def startup(self) -> str:
+        """User startup folder"""
+        return os.path.join(self.appdata, "Microsoft", "Windows", "Start Menu", "Programs", "Startup")
+
+    @property
+    def public(self) -> str:
+        """Public user profile"""
+        return os.environ.get("PUBLIC", os.path.join(self.system_drive, "Users", "Public"))
+
+    @property
+    def userprofile(self) -> str:
+        """Current user profile root"""
+        return os.environ.get("USERPROFILE", self.home)
 
     def join(self, *parts) -> str:
         """Cross-platform safe path join"""

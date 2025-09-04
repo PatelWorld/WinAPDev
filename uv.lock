@@ -3,7 +3,7 @@ revision = 3
 requires-python = ">=3.13"
 
 [[package]]
-name = "amp-server"
+name = "win-ap-dev"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

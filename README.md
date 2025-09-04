@@ -27,5 +27,9 @@ Powered by **Python**, WinAPDev makes it easy to spin up a minimal PHP developme
    ```bash
    git clone https://github.com/your-username/WinAPDev.git
    cd WinAPDev
-   uv pip
+   uv venv   
+   uv pip install -r requirements.txt   
    ```
+   
+## Uses
+1. 

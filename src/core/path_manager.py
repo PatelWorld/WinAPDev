@@ -10,7 +10,7 @@ class PathManager:
         # Discover project root dynamically
         self._project_root = Path(__file__).resolve().parents[2]
         self._install_drive = Path(SystemPaths().system_drive)
-        self._deployment_root = self._install_drive / Constants.BRAND_NAME
+        self._deployment_root = (self._install_drive / Constants.BRAND_NAME)
 
         # --- Project paths ---
         self._project = {
