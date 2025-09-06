@@ -10,6 +10,9 @@ from src.core.server import Server
 from colorama import init, Fore, Back
 from collections import defaultdict
 
+from src.core.virtual_host import VirtualHost
+from src.core.cli_arguments import Arguments
+
 init(autoreset=True)
 
 
@@ -35,6 +38,8 @@ def show_help():
 
 
 try:
+    args = Arguments()
+
     registered_commands = {
         "dev:setup": {
             "func": lambda: Server().setup(),
@@ -48,14 +53,14 @@ try:
         #     "func": lambda: Server().init(),
         #     "desc": "Initialize the server stack"
         # },
-        "server:conf": {
-            "func": lambda: Server().conf(),
-            "desc": "Configure server settings"
-        },
-        "server:update": {
-            "func": lambda: Server().update(),
-            "desc": "Update the server stack"
-        },
+        # "server:conf": {
+        #     "func": lambda: Server().conf(),
+        #     "desc": "Configure server settings"
+        # },
+        # "server:update": {
+        #     "func": lambda: Server().update(),
+        #     "desc": "Update the server stack"
+        # },
         # "app:init": {
         #     "func": lambda: App().init(),
         #     "desc": "Initialize the application"
@@ -96,9 +101,13 @@ try:
             "func": lambda: Service().restart(),
             "desc": "Restart service"
         },
-        "config:show": {
-            "func": lambda: print("Not implemented yet"),
-            "desc": "Show current configuration"
+        "vhost:add": {
+            "func": lambda: VirtualHost().add_project(args),
+            "desc": "Add random virtual host for any PHP project"
+        },
+        "vhost:remove":{
+            "func": lambda : VirtualHost().remove_project(args),
+            "desc": "Remove random added virtual host for any PHP project"
         },
         "help": {
             "func": lambda: show_help(),
@@ -120,5 +129,6 @@ try:
         print(f"{Back.RED} Error: Unknown command '{command}'")
         show_help()
 
-except Exception:
+except Exception as e:
+    print(e)
     traceback.print_exc()
