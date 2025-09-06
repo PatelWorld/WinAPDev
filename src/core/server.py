@@ -4,7 +4,8 @@ from pathlib import Path
 from colorama import init, Fore
 
 from src.core.app_structure import AppStructure
-from src.core.batch_file_creator import BatchFileCreator
+from src.core.helper import Helper
+from src.core.php_env_launcher import PhpEnvLauncher
 from src.core.binaries import Binaries
 from src.core.console_logger import ConsoleLogger
 from src.core.constants import Constants
@@ -39,7 +40,7 @@ class Server:
         self.__write_batch()
         Service().install()
         Service().start()
-        self.__open_app()
+        Helper.open_app("localhost")
 
     def conf(self):
         Service().stop()
@@ -81,6 +82,7 @@ class Server:
     def __configure(self):
         self.__create_server_index_file()
         Templates().deploy()
+        VirtualHost().add("localhost", 80, self.path_manager.deploy_structure(Constants.DIR_WWW))
         VirtualHost().add("dev.local", 80, self.path_manager.deploy_structure(Constants.DIR_WWW))
 
     def __write_env(self):
@@ -104,15 +106,8 @@ class Server:
                 </html>
             """)
 
-    def __open_app(self):
-        cmd = f"start chrome http://dev.local:80"
-        print(
-            f"\nApplication URL: http://dev.local:80"
-        )
-        os.system(cmd)
-
     def __write_batch(self):
         command_file = os.path.join(self.path_manager.deploy_structure(Constants.DIR_COMMAND),"php.env.bat")
-        BatchFileCreator(self.path_manager.project_structure(Constants.KEY_ROOT), command_file).create_batch()
+        PhpEnvLauncher(self.path_manager.deploy_structure(Constants.DIR_COMMAND)).create()
         # target_file = os.path.join(self.path_manager.paths.system32, "php.env.bat")
         # os.system(f"mklink /D {target_file} {command_file}")

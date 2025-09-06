@@ -1,3 +1,7 @@
+import os.path
+import webbrowser
+
+
 class Helper:
     def __init__(self):
         pass
@@ -24,3 +28,11 @@ class Helper:
             fp.truncate()
             fp.write(file_data)
         fp.close()
+
+    @staticmethod
+    def open_app(hostname: str, port: int = 80, ssl: bool = False):
+        scheme = "https" if ssl else "http"
+        url = f"{scheme}://{hostname}:{port}"
+        print(f"\nApplication URL: {url}")
+        webbrowser.open(url)  # opens in default browser
+

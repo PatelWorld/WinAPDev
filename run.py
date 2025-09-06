@@ -81,26 +81,26 @@ try:
         #     "func": lambda: App().open(),
         #     "desc": "Open the application in browser"
         # },
-        # "service:install": {
-        #     "func": lambda: Service().install(),
-        #     "desc": "Install background service"
-        # },
-        # "service:remove": {
-        #     "func": lambda: Service().remove(),
-        #     "desc": "Remove background service"
-        # },
-        # "service:start": {
-        #     "func": lambda: Service().start(),
-        #     "desc": "Start service"
-        # },
-        # "service:stop": {
-        #     "func": lambda: Service().stop(),
-        #     "desc": "Stop service"
-        # },
-        # "service:restart": {
-        #     "func": lambda: Service().restart(),
-        #     "desc": "Restart service"
-        # },
+        "service:install": {
+            "func": lambda: Service().install(),
+            "desc": "Install background service"
+        },
+        "service:remove": {
+            "func": lambda: Service().remove(),
+            "desc": "Remove background service"
+        },
+        "service:start": {
+            "func": lambda: Service().start(),
+            "desc": "Start service"
+        },
+        "service:stop": {
+            "func": lambda: Service().stop(),
+            "desc": "Stop service"
+        },
+        "service:restart": {
+            "func": lambda: Service().restart(),
+            "desc": "Restart service"
+        },
         "vhost:add": {
             "func": lambda: VirtualHost().add_project(args),
             "desc": "Add random virtual host for any PHP project"
@@ -129,5 +129,6 @@ try:
         print(f"{Back.RED} Error: Unknown command '{command}'")
         show_help()
 
-except Exception:
+except Exception as e:
+    print(e)
     traceback.print_exc()
